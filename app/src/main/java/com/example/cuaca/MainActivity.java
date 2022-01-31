@@ -29,18 +29,22 @@ public class MainActivity extends AppCompatActivity {
     GridView grid;
     TextView tvLocation, tvDescription;
     ImageView ivCurrent;
+    String name, city;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        grid = (GridView) findViewById(R.id.datagrid);
-        tvLocation = (TextView) findViewById(R.id.lokasi);
-        ivCurrent = (ImageView) findViewById(R.id.todayweather);
-        tvDescription = (TextView) findViewById(R.id.description);
+        grid = findViewById(R.id.datagrid);
+        tvLocation = findViewById(R.id.lokasi);
+        ivCurrent = findViewById(R.id.todayweather);
+        tvDescription = findViewById(R.id.description);
 
-        String url = "https://api.openweathermap.org/data/2.5/onecall?lat=-6.9020805&lon=107.6157571&exclude=current,minutely,hourly,alerts&appid=cc30933ca3e53f64426e121993e2d6ba&lang=id&units=metric";
+        Bundle bundle = getIntent().getExtras();
+        city = bundle.getString("city");
+
+        String url = "https://api.openweathermap.org/data/2.5/onecall?lat=-6.90389&lon=107.618607&exclude=current,minutely,hourly,alerts&appid=cc30933ca3e53f64426e121993e2d6ba&lang=id&units=metric";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -80,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
             Weather weather = currentDaily.weathers.get(0);
 
             String dateString = DateFormat.format("EEEE, dd MMMM yyyy", currentDaily.getDate()).toString();
-            tvLocation.setText("Kota Bandung \n" + dateString);
+            tvLocation.setText(city + " \n" + dateString);
             Picasso.get().load(weather.getIconURL()).into(ivCurrent);
 
-            tvDescription.setText(weather.description);
+            tvDescription.setText(weather.description + " \u2103");
         }
     }
 }
